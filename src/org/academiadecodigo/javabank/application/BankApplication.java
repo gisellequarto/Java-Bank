@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 public class BankApplication {
 
+
     private Map<Integer, Operation> operationMap;
     private BankMenu bankMenu;
 
