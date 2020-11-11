@@ -6,6 +6,7 @@ import org.academiadecodigo.javabank.managers.AccountManager;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The customer domain entity
@@ -14,6 +15,8 @@ public class Customer {
 
     private AccountManager accountManager;
     private Map<Integer, Account> accounts = new HashMap<>();
+    private int customerId;
+    private String name;
 
     /**
      * Sets the account manager
@@ -63,4 +66,41 @@ public class Customer {
         return balance;
     }
 
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public AccountManager getAccountManager() {
+        return accountManager;
+    }
+
+    public Map<Integer, Account> getAccounts() {
+        return accounts;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return customerId == customer.customerId &&
+                name.equals(customer.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(customerId, name);
+    }
 }

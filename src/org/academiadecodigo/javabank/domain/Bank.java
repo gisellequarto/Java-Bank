@@ -3,6 +3,7 @@ package org.academiadecodigo.javabank.domain;
 import org.academiadecodigo.javabank.managers.AccountManager;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -30,6 +31,7 @@ public class Bank {
      */
     public void addCustomer(Customer customer) {
         customers.add(customer);
+        customer.setCustomerId(customers.size());
         customer.setAccountManager(accountManager);
     }
 
@@ -48,4 +50,24 @@ public class Bank {
 
         return balance;
     }
+
+    public boolean checkCustomer(int inputId) {
+        for(Customer c : customers) {
+            if (c.getCustomerId() == inputId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Customer getCustomer(int customerId) {
+        for(Customer c : customers) {
+            if (c.getCustomerId() == customerId) {
+                return c;
+            }
+        }
+        throw new NoSuchElementException();
+    }
+
+
 }

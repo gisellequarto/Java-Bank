@@ -1,18 +1,28 @@
 package org.academiadecodigo.javabank.application.operations;
 
+import org.academiadecodigo.javabank.domain.Bank;
+import org.academiadecodigo.javabank.domain.account.Account;
+
+import java.util.Map;
+import java.util.Set;
+
 public class ViewBalance implements Operation{
 
 
     @Override
-    public void makeOperation() {
+    public void makeOperation(Bank bank, int customerId) {
 
-        if(OpenAccount.customer == null) {
-            System.out.println("You are not our customer yet. Please, open your account with us.");
-            return;
+        Set<Integer> accountsId = bank.getCustomer(customerId).getAccounts().keySet();
+        Map<Integer, Account> customerAccounts = bank.getCustomer(customerId).getAccounts();
+        bank.getCustomer(customerId);
+
+        for(Integer i : accountsId) {
+            String type = customerAccounts.get(i).getAccountType().toString();
+            System.out.print("\n" + type +" Balance: " + bank.getCustomer(customerId).getBalance(i) + " €.");
         }
-        
-        System.out.println("\n" + OpenAccount.type.toString() + " balance: " + OpenAccount.customer.getBalance(OpenAccount.actualId) + " €.");
 
-        System.out.println("\nTotal Balance: " + OpenAccount.customer.getBalance(OpenAccount.actualId) + " €.");
+        System.out.println("\nTotal Balance: " + bank.getCustomer(customerId).getBalance() + " €.");
+
     }
+
 }
