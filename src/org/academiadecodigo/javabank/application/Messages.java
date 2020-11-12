@@ -3,7 +3,7 @@ package org.academiadecodigo.javabank.application;
 /**
  * Messages to be used throughout the application
  */
-public class Messages {
+public class Messages {    
 
     public final static String MENU_WELCOME = "Welcome to Java Bank";
     public final static String MENU_OPEN_ACCOUNT = "Open Account";
