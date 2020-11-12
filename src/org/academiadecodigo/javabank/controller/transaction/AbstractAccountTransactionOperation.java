@@ -1,12 +1,11 @@
-package org.academiadecodigo.javabank.application.operations.transaction;
+package org.academiadecodigo.javabank.controller.transaction;
 
 import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.bootcamp.scanners.integer.IntegerSetInputScanner;
 import org.academiadecodigo.bootcamp.scanners.precisiondouble.DoubleInputScanner;
-import org.academiadecodigo.javabank.application.BankApplication;
-import org.academiadecodigo.javabank.application.Messages;
-import org.academiadecodigo.javabank.application.operations.AbstractBankOperation;
-import org.academiadecodigo.javabank.managers.AccountManager;
+import org.academiadecodigo.javabank.controller.BankApplication;
+import org.academiadecodigo.javabank.model.domain.managers.AccountManager;
+import org.academiadecodigo.javabank.view.Messages;
 
 /**
  * A generic account transaction to be used as a base for concrete transaction implementations

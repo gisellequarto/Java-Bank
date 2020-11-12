@@ -1,7 +1,8 @@
-package org.academiadecodigo.javabank.application.operations.transaction;
+package org.academiadecodigo.javabank.controller.operations;
 
-import org.academiadecodigo.javabank.application.BankApplication;
-import org.academiadecodigo.javabank.application.UserOptions;
+import org.academiadecodigo.javabank.controller.BankApplication;
+import org.academiadecodigo.javabank.controller.transaction.AbstractAccountTransactionOperation;
+import org.academiadecodigo.javabank.view.UserOptions;
 
 /**
  * An account transaction used to withdraw an amount

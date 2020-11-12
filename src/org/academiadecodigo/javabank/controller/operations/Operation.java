@@ -1,4 +1,4 @@
-package org.academiadecodigo.javabank.application.operations;
+package org.academiadecodigo.javabank.controller.operations;
 
 /**
  * Common interface for bank operations, providing an execution method

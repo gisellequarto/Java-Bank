@@ -1,4 +1,4 @@
-package org.academiadecodigo.javabank.application;
+package org.academiadecodigo.javabank.view;
 
 /**
  * Messages to be used throughout the application

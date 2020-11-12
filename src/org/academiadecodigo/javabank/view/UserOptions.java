@@ -1,10 +1,10 @@
-package org.academiadecodigo.javabank.application;
+package org.academiadecodigo.javabank.view;
 
-import org.academiadecodigo.javabank.application.operations.BalanceOperation;
-import org.academiadecodigo.javabank.application.operations.NewAccountOperation;
-import org.academiadecodigo.javabank.application.operations.Operation;
-import org.academiadecodigo.javabank.application.operations.transaction.DepositOperation;
-import org.academiadecodigo.javabank.application.operations.transaction.WithdrawOperation;
+import org.academiadecodigo.javabank.controller.operations.BalanceOperation;
+import org.academiadecodigo.javabank.controller.operations.NewAccountOperation;
+import org.academiadecodigo.javabank.controller.operations.Operation;
+import org.academiadecodigo.javabank.controller.operations.DepositOperation;
+import org.academiadecodigo.javabank.controller.operations.WithdrawOperation;
 
 /**
  * The possible {@link Operation} types
