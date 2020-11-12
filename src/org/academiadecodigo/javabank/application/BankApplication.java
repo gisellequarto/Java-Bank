@@ -24,7 +24,7 @@ public class BankApplication {
         initializeMap();
         this.bank = bank;
         entryOptions();
-     //   loadAppMenu();
+        //   loadAppMenu();
     }
 
     private void initializeMap() {
@@ -37,6 +37,17 @@ public class BankApplication {
 
     public void makeOperation(int userOption) {
         operationMap.get(userOption).makeOperation(bank, customerId);
+    }
+
+
+    public void start() {
+
+        int userOption = entryOptions();
+
+        if(userOption = )
+
+
+
     }
 
 
@@ -57,9 +68,6 @@ public class BankApplication {
                     makeOperation(userOption);
                 }
             }
-
-
-            // direcionar para abrir a conta.. não é cliente... fazer input do nome e adicionar no bank... e retornar para bank login()
 
             makeOperation(4);
         }
@@ -82,12 +90,12 @@ public class BankApplication {
         return false;
     }
 
-    private void entryOptions() {
+    private int entryOptions() {
 
         int answer = 3;
 
-        while (answer != 0) {
-            String [] options = {"Login",
+        while (answer == 3) {
+            String[] options = {"Login",
                     "Register"};
             answer = JOptionPane.showOptionDialog(null,
                     "How can we help you today?",
@@ -98,10 +106,9 @@ public class BankApplication {
                     options,  //the titles of buttons
                     options[0]); //default button title
 
-            System.out.println(answer);
-
         }
-
+        System.out.println(answer);
+            return answer;
     }
 
 }
