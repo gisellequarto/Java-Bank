@@ -7,6 +7,8 @@ import org.academiadecodigo.javabank.controller.transaction.WithdrawalController
 import org.academiadecodigo.javabank.managers.AccountManager;
 import org.academiadecodigo.javabank.model.Bank;
 import org.academiadecodigo.javabank.model.Customer;
+import org.academiadecodigo.javabank.service.account.AccountService;
+import org.academiadecodigo.javabank.service.account.ConcreteAccountService;
 import org.academiadecodigo.javabank.view.*;
 
 import java.util.HashMap;
@@ -47,7 +49,10 @@ public class Bootstrap {
     public LoginController wireObjects(Bank bank) {
 
         // attach all input to standard i/o
+        //And the service layer
         Prompt prompt = new Prompt(System.in, System.out);
+        AccountService service = new ConcreteAccountService();
+
 
         // wire login controller and view
         LoginController loginController = new LoginController();
@@ -76,7 +81,7 @@ public class Bootstrap {
         // wire new account controller and view
         NewAccountView newAccountView = new NewAccountView();
         NewAccountController newAccountController = new NewAccountController();
-        newAccountController.setBank(bank);
+        newAccountController.setAccountService(service);
         newAccountController.setView(newAccountView);
         newAccountView.setNewAccountController(newAccountController);
 
