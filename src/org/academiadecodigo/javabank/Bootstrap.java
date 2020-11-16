@@ -99,14 +99,16 @@ public class Bootstrap {
         WithdrawalController withdrawalController = new WithdrawalController();
         AccountTransactionView depositView = new AccountTransactionView();
         AccountTransactionView withdrawView = new AccountTransactionView();
-        depositController.setBank(bank);
+        depositController.setAccountService(accountService);
+        depositController.setAuthenticateService(authenticateService);
+        depositController.setCustomerService(customerService);
         depositController.setView(depositView);
-        withdrawalController.setBank(bank);
+        withdrawalController.setAccountService(accountService);
+        withdrawalController.setAuthenticateService(authenticateService);
+        withdrawalController.setCustomerService(customerService);
         withdrawalController.setView(withdrawView);
-        depositView.setBank(bank);
         depositView.setPrompt(prompt);
         depositView.setTransactionController(depositController);
-        withdrawView.setBank(bank);
         withdrawView.setPrompt(prompt);
         withdrawView.setTransactionController(withdrawalController);
 
