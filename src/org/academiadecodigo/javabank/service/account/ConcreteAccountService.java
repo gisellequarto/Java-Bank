@@ -7,7 +7,7 @@ import org.academiadecodigo.javabank.model.account.AccountType;
 
 import java.util.Map;
 
-public class ConcreteAccountService implements AccountService {
+public class ConcreteAccountService implements AccountService{
 
     private Map<Integer, Account> accountMap;
     private Controller controller;

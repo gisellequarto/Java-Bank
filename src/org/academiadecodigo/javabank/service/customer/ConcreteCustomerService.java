@@ -13,7 +13,7 @@ public class ConcreteCustomerService implements CustomerService{
 
     @Override
     public Customer get(Integer id) {
-        return null;
+        return customersMap.get(id);
     }
 
     @Override
@@ -23,17 +23,22 @@ public class ConcreteCustomerService implements CustomerService{
 
     @Override
     public Set<Integer> listCustomerAccountIds(Integer id) {
-        return null;
+        return customersMap.get(id).getAccountIds();
     }
 
     @Override
     public double getBalance(int customerId) {
-        return 0;
+        return customersMap.get(customerId).getBalance();
     }
 
     @Override
     public void add(Customer customer) {
+        customersMap.put(customer.getId(), customer);
+    }
 
+    @Override
+    public Set<Integer> getCustomerIds() {
+        return customersMap.keySet();
     }
 
 }

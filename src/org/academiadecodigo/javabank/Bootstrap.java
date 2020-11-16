@@ -9,6 +9,10 @@ import org.academiadecodigo.javabank.model.Bank;
 import org.academiadecodigo.javabank.model.Customer;
 import org.academiadecodigo.javabank.service.account.AccountService;
 import org.academiadecodigo.javabank.service.account.ConcreteAccountService;
+import org.academiadecodigo.javabank.service.authenticate.AuthenticateService;
+import org.academiadecodigo.javabank.service.authenticate.ConcreteAuthenticateService;
+import org.academiadecodigo.javabank.service.customer.ConcreteCustomerService;
+import org.academiadecodigo.javabank.service.customer.CustomerService;
 import org.academiadecodigo.javabank.view.*;
 
 import java.util.HashMap;
@@ -24,20 +28,23 @@ public class Bootstrap {
      *
      * @return the bank
      */
-    public Bank generateTestData() {
+    public CustomerService generateTestData() {
 
         Bank bank = new Bank();
         AccountManager accountManager = new AccountManager();
         bank.setAccountManager(accountManager);
 
+        CustomerService customerService = new ConcreteCustomerService();
+
+
         Customer c1 = new Customer(1, "Rui");
         Customer c2 = new Customer(2, "Sergio");
         Customer c3 = new Customer(3, "Bruno");
-        bank.addCustomer(c1);
-        bank.addCustomer(c2);
-        bank.addCustomer(c3);
+        customerService.add(c1);
+        customerService.add(c2);
+        customerService.add(c3);
 
-        return bank;
+        return customerService;
     }
 
     /**
@@ -46,27 +53,28 @@ public class Bootstrap {
      * @param bank the bank to wire
      * @return the login controller
      */
-    public LoginController wireObjects(Bank bank) {
+    public LoginController wireObjects(CustomerService customerService) {
 
         // attach all input to standard i/o
         //And the service layer
         Prompt prompt = new Prompt(System.in, System.out);
-        AccountService service = new ConcreteAccountService();
-
+        AccountService accountService = new ConcreteAccountService();
+        AuthenticateService authenticateService = new ConcreteAuthenticateService();
+        authenticateService.setCustomerService(customerService);
 
         // wire login controller and view
         LoginController loginController = new LoginController();
         LoginView loginView = new LoginView();
         loginController.setView(loginView);
-        loginController.setBank(bank);
-        loginView.setBank(bank);
+        loginController.setAuthenticateService(authenticateService);
+        loginController.setCustomerService(customerService);
         loginView.setLoginController(loginController);
         loginView.setPrompt(prompt);
 
         // wire main controller and view
         MainController mainController = new MainController();
         MainView mainView = new MainView();
-        mainView.setBank(bank);
+        mainController.setAuthenticateService(authenticateService);
         mainView.setPrompt(prompt);
         mainView.setMainController(mainController);
         mainController.setView(mainView);
@@ -75,13 +83,14 @@ public class Bootstrap {
         // wire balance controller and view
         BalanceController balanceController = new BalanceController();
         BalanceView balanceView = new BalanceView();
+        balanceController.setAuthenticateService(authenticateService);
         balanceController.setView(balanceView);
-        balanceView.setBank(bank);
+        balanceView.setBalanceController(balanceController);
 
         // wire new account controller and view
         NewAccountView newAccountView = new NewAccountView();
         NewAccountController newAccountController = new NewAccountController();
-        newAccountController.setAccountService(service);
+        newAccountController.setAccountService(accountService);
         newAccountController.setView(newAccountView);
         newAccountView.setNewAccountController(newAccountController);
 

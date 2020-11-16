@@ -2,7 +2,10 @@ package org.academiadecodigo.javabank.controller;
 
 import org.academiadecodigo.javabank.model.Bank;
 import org.academiadecodigo.javabank.service.authenticate.AuthenticateService;
+import org.academiadecodigo.javabank.service.customer.CustomerService;
 import org.academiadecodigo.javabank.view.LoginView;
+
+import java.util.Set;
 
 /**
  * The {@link LoginView} controller
@@ -11,9 +14,8 @@ public class LoginController extends AbstractController {
 
     private Controller nextController;
 
-    private Bank bank;
-
     private AuthenticateService authenticateService;
+    private CustomerService customerService;
     /**
      * Sets the next controller
      *
@@ -27,14 +29,8 @@ public class LoginController extends AbstractController {
         this.authenticateService = authenticateService;
     }
 
-    /**
-     * Sets the bank
-     *
-     * @param bank the bank to be set
-     */
-
-    public void setBank(Bank bank) {
-        this.bank = bank;
+    public void setCustomerService(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     /**
@@ -43,8 +39,15 @@ public class LoginController extends AbstractController {
      * @param id the customer id
      */
     public void onLogin(int id) {
-        bank.setLoginCustomer(id);
+        authenticateService.authenticate(id);
         nextController.init();
     }
+
+
+    public Set<Integer> getCustomerIds() {
+        return customerService.getCustomerIds();
+    }
+
+
 
 }

@@ -12,6 +12,6 @@ public interface CustomerService {
     Set<Integer> listCustomerAccountIds(Integer id);
     double getBalance(int customerId);
     void add(Customer customer);
-
+    Set<Integer> getCustomerIds();
 
 }
