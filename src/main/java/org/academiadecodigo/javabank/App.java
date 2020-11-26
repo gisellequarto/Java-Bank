@@ -3,6 +3,7 @@ package org.academiadecodigo.javabank;
 import org.academiadecodigo.javabank.controller.Controller;
 import org.academiadecodigo.javabank.services.AccountServiceImpl;
 import org.academiadecodigo.javabank.services.AuthServiceImpl;
+import org.academiadecodigo.javabank.services.ConnectionManager;
 import org.academiadecodigo.javabank.services.CustomerServiceImpl;
 
 public class App {
@@ -11,6 +12,7 @@ public class App {
 
         App app = new App();
         app.bootStrap();
+        ConnectionManager.closeEmf();
     }
 
     private void bootStrap() {

@@ -3,6 +3,8 @@ package org.academiadecodigo.javabank.services;
 import org.academiadecodigo.javabank.model.Customer;
 import org.academiadecodigo.javabank.model.account.Account;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.*;
 
 /**
@@ -10,23 +12,20 @@ import java.util.*;
  */
 public class CustomerServiceImpl implements CustomerService {
 
-    private Map<Integer, Customer> customerMap = new HashMap<>();
-
-    /**
-     * Gets the next account id
-     *
-     * @return the next id
-     */
-    private Integer getNextId() {
-        return customerMap.isEmpty() ? 1 : Collections.max(customerMap.keySet()) + 1;
-    }
-
     /**
      * @see CustomerService#get(Integer)
      */
     @Override
     public Customer get(Integer id) {
-        return customerMap.get(id);
+        EntityManager em = ConnectionManager.getEm();
+        em.getTransaction().begin();
+
+        Customer customer = em.merge(em.find(Customer.class, id));
+
+        em.getTransaction().commit();
+        em.close();
+
+        return customer;
     }
 
     /**
@@ -34,7 +33,21 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public List<Customer> list() {
-        return new ArrayList<>(customerMap.values());
+        List<Customer> customerList = new LinkedList<>();
+
+        EntityManager em = ConnectionManager.getEm();
+
+        em.getTransaction().begin();
+
+        TypedQuery<Customer> query =
+                em.createQuery("SELECT customer FROM Customer customer", Customer.class);
+
+        customerList = query.getResultList();
+
+        em.getTransaction().commit();
+        em.close();
+
+        return customerList;
     }
 
     /**
@@ -44,11 +57,23 @@ public class CustomerServiceImpl implements CustomerService {
     public Set<Integer> listCustomerAccountIds(Integer id) {
 
         Set<Integer> accountIds = new HashSet<>();
-        List<Account> accountList = customerMap.get(id).getAccounts();
+        List<Account> accountList = new LinkedList<>();
+
+        EntityManager em = ConnectionManager.getEm();
+
+        em.getTransaction().begin();
+
+        TypedQuery<Account> query =
+                em.createQuery("SELECT accounts FROM Accounts accounts WHERE accounts.customer.id = :id", Account.class);
+        query.setParameter("id", id);
+        accountList = query.getResultList();
 
         for (Account account : accountList) {
             accountIds.add(account.getId());
         }
+
+        em.getTransaction().commit();
+        em.close();
 
         return accountIds;
     }
@@ -59,12 +84,19 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public double getBalance(int id) {
 
-        List<Account> accounts = customerMap.get(id).getAccounts();
-
+        Set<Integer> accountIds = listCustomerAccountIds(id);
         double balance = 0;
-        for (Account account : accounts) {
+
+        EntityManager em = ConnectionManager.getEm();
+        em.getTransaction().begin();
+
+        for (Integer i : accountIds) {
+            Account account = em.merge(em.find(Account.class, i));
             balance += account.getBalance();
         }
+
+        em.getTransaction().commit();
+        em.close();
 
         return balance;
     }
@@ -75,10 +107,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void add(Customer customer) {
 
-        if (customer.getId() == null) {
-            customer.setId(getNextId());
-        }
+        EntityManager em = ConnectionManager.getEm();
+        em.getTransaction().begin();
 
-        customerMap.put(customer.getId(), customer);
+        em.persist(customer);
+
+        em.getTransaction().commit();
+        em.close();
+
     }
 }
