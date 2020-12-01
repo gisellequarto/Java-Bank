@@ -1,23 +1,30 @@
 package org.academiadecodigo.javabank.services.jpa;
 
+import org.academiadecodigo.javabank.dao.DaoAccount;
 import org.academiadecodigo.javabank.model.account.Account;
 import org.academiadecodigo.javabank.services.AccountService;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.RollbackException;
-import java.util.Optional;
 
 /**
  * A JPA {@link AccountService} implementation
  */
 public class JpaAccountService extends AbstractJpaService<Account> implements AccountService {
 
+    private DaoAccount daoAccount;
     /**
-     * @see AbstractJpaService#AbstractJpaService(EntityManagerFactory, Class)
+     * Initializes a new {@code JPA Service} instance given an entity manager factory and a model type
+     *
+     * @param emf       the entity manager factory
+     * @param modelType the model type
      */
-    public JpaAccountService(EntityManagerFactory emf) {
-        super(emf, Account.class);
+
+
+    public JpaAccountService(EntityManagerFactory emf, Class<Account> modelType) {
+        super(emf, modelType);
+    }
+
+    public JpaAccountService() {
     }
 
     /**
@@ -26,32 +33,24 @@ public class JpaAccountService extends AbstractJpaService<Account> implements Ac
     @Override
     public void deposit(Integer id, double amount) {
 
-        EntityManager em = emf.createEntityManager();
+        transactionManager.beginWrite();
 
-        try {
+        Account account = daoAccount.getAccount(id);
 
-            em.getTransaction().begin();
-
-            Optional<Account> account = Optional.ofNullable(em.find(Account.class, id));
-
-            if (!account.isPresent()) {
-                em.getTransaction().rollback();
-            }
-
-            account.orElseThrow(() -> new IllegalArgumentException("invalid account id")).credit(amount);
-
-            em.getTransaction().commit();
-
-        } catch (RollbackException ex) {
-
-            em.getTransaction().rollback();
-
-        } finally {
-
-            if (em != null) {
-                em.close();
-            }
+        if (account == null) {
+            transactionManager.rollback();
         }
+
+        if (account.canCredit(amount)) {
+            account.credit(amount);
+        }
+
+        if (!daoAccount.saveAccount(account)) {
+            transactionManager.rollback();
+        }
+
+        transactionManager.commit();
+
     }
 
     /**
@@ -60,32 +59,24 @@ public class JpaAccountService extends AbstractJpaService<Account> implements Ac
     @Override
     public void withdraw(Integer id, double amount) {
 
-        EntityManager em = emf.createEntityManager();
+        transactionManager.beginWrite();
 
-        try {
+        Account account = daoAccount.getAccount(id);
 
-            em.getTransaction().begin();
-
-            Optional<Account> account = Optional.ofNullable(em.find(Account.class, id));
-
-            if (!account.isPresent()) {
-                em.getTransaction().rollback();
-            }
-
-            account.orElseThrow(() -> new IllegalArgumentException("invalid account id")).debit(amount);
-
-            em.getTransaction().commit();
-
-        } catch (RollbackException ex) {
-
-            em.getTransaction().rollback();
-
-        } finally {
-
-            if (em != null) {
-                em.close();
-            }
+        if (account == null) {
+            transactionManager.rollback();
         }
+
+        if (account.canDebit(amount)) {
+            account.debit(amount);
+        }
+
+        if (!daoAccount.saveAccount(account)) {
+            transactionManager.rollback();
+        }
+
+        transactionManager.commit();
+
     }
 
     /**
@@ -94,39 +85,29 @@ public class JpaAccountService extends AbstractJpaService<Account> implements Ac
     @Override
     public void transfer(Integer srcId, Integer dstId, double amount) {
 
-        EntityManager em = emf.createEntityManager();
+        transactionManager.beginWrite();
 
-        try {
+        Account accountSrc = daoAccount.getAccount(srcId);
+        Account accountDst = daoAccount.getAccount(dstId);
 
-            em.getTransaction().begin();
-
-            Optional<Account> srcAccount = Optional.ofNullable(em.find(Account.class,srcId ));
-            Optional<Account> dstAccount = Optional.ofNullable(em.find(Account.class,dstId ));
-
-            if (!srcAccount.isPresent() || !dstAccount.isPresent()) {
-                em.getTransaction().rollback();
-            }
-
-            srcAccount.orElseThrow(() -> new IllegalArgumentException("invalid account id"));
-            dstAccount.orElseThrow(() -> new IllegalArgumentException("invalid account id"));
-
-            // make sure transaction can be performed
-            if (srcAccount.get().canDebit(amount) && dstAccount.get().canCredit(amount)) {
-                srcAccount.get().debit(amount);
-                dstAccount.get().credit(amount);
-            }
-
-            em.getTransaction().commit();
-
-        } catch (RollbackException ex) {
-
-            em.getTransaction().rollback();
-
-        } finally {
-
-            if (em != null) {
-                em.close();
-            }
+        if (accountSrc == null || accountDst == null) {
+            transactionManager.rollback();
         }
+
+        if (accountSrc.canDebit(amount) && accountDst.canCredit(amount)) {
+            accountSrc.debit(amount);
+            accountDst.credit(amount);
+        }
+
+        if ((!daoAccount.saveAccount(accountSrc)) || (!daoAccount.saveAccount(accountDst))) {
+            transactionManager.rollback();
+        }
+
+        transactionManager.commit();
     }
+
+    public void setDaoAccount(DaoAccount daoAccount) {
+        this.daoAccount = daoAccount;
+    }
+
 }

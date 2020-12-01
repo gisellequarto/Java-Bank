@@ -15,23 +15,23 @@ public class App {
 
     public static void main(String[] args) {
 
-        JpaBootstrap jpa = new JpaBootstrap();
-        EntityManagerFactory emf = jpa.start();
+     //   JpaBootstrap jpa = new JpaBootstrap();
+       // EntityManagerFactory emf = jpa.start();
 
         App app = new App();
-        app.bootStrap(emf);
+        app.bootStrap();
 
-        jpa.stop();
+//        jpa.stop();
 
     }
 
-    private void bootStrap(EntityManagerFactory emf) {
+    private void bootStrap() {
 
         Bootstrap bootstrap = new Bootstrap();
 
         bootstrap.setAuthService(new AuthServiceImpl());
-        bootstrap.setAccountService(new JpaAccountService(emf));
-        bootstrap.setCustomerService(new JpaCustomerService(emf));
+        bootstrap.setAccountService(new JpaAccountService());
+        bootstrap.setCustomerService(new JpaCustomerService());
 
         Controller controller = bootstrap.wireObjects();
 

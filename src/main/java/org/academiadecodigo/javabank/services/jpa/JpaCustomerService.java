@@ -1,5 +1,6 @@
 package org.academiadecodigo.javabank.services.jpa;
 
+import org.academiadecodigo.javabank.dao.DaoCustomer;
 import org.academiadecodigo.javabank.model.AbstractModel;
 import org.academiadecodigo.javabank.model.Customer;
 import org.academiadecodigo.javabank.model.account.Account;
@@ -18,11 +19,16 @@ import java.util.stream.Collectors;
  */
 public class JpaCustomerService extends AbstractJpaService<Customer> implements CustomerService {
 
+    private DaoCustomer daoCustomer;
+
     /**
      * @see AbstractJpaService#AbstractJpaService(EntityManagerFactory, Class)
      */
     public JpaCustomerService(EntityManagerFactory emf) {
         super(emf, Customer.class);
+    }
+
+    public JpaCustomerService() {
     }
 
     /**
@@ -31,22 +37,21 @@ public class JpaCustomerService extends AbstractJpaService<Customer> implements 
     @Override
     public double getBalance(Integer id) {
 
-        EntityManager em = emf.createEntityManager();
+        transactionManager.beginRead();
 
-        try {
+        Customer customer = daoCustomer.getCustomer(id);
 
-            Customer customer = Optional.ofNullable(em.find(Customer.class, id))
-                .orElseThrow(() -> new IllegalArgumentException("Customer does not exist"));
-
-            return customer.getAccounts().stream()
-                    .mapToDouble(Account::getBalance)
-                    .sum();
-
-        } finally {
-            if (em != null) {
-                em.close();
-            }
+        if (customer == null) {
+            transactionManager.rollback();
         }
+
+        Double balance = customer.getAccounts().stream()
+                .mapToDouble(Account::getBalance)
+                .sum();
+
+        transactionManager.commit();
+        return balance;
+
     }
 
     /**
@@ -55,22 +60,24 @@ public class JpaCustomerService extends AbstractJpaService<Customer> implements 
     @Override
     public Set<Integer> listCustomerAccountIds(Integer id) {
 
-        EntityManager em = emf.createEntityManager();
+        transactionManager.beginRead();
 
-        try {
+        Customer customer = daoCustomer.getCustomer(id);
 
-            Customer customer = Optional.ofNullable(em.find(Customer.class, id))
-                    .orElseThrow(() -> new IllegalArgumentException("Customer does not exist"));
-
-            return customer.getAccounts().stream()
-                    .map(AbstractModel::getId)
-                    .collect(Collectors.toSet());
-
-        } finally {
-            if (em != null) {
-                em.close();
-            }
+        if (customer == null) {
+            transactionManager.rollback();
         }
 
+        Set<Integer> accountsIds = customer.getAccounts().stream()
+                .map(AbstractModel::getId)
+                .collect(Collectors.toSet());
+
+        transactionManager.commit();
+        return accountsIds;
+
+    }
+
+    public void setDaoCustomer(DaoCustomer daoCustomer) {
+        this.daoCustomer = daoCustomer;
     }
 }

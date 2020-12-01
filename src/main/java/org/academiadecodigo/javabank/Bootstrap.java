@@ -4,10 +4,16 @@ import org.academiadecodigo.bootcamp.Prompt;
 import org.academiadecodigo.javabank.controller.*;
 import org.academiadecodigo.javabank.controller.transaction.DepositController;
 import org.academiadecodigo.javabank.controller.transaction.WithdrawalController;
+import org.academiadecodigo.javabank.dao.DaoAccount;
+import org.academiadecodigo.javabank.dao.DaoCustomer;
+import org.academiadecodigo.javabank.dao.SessionManager;
+import org.academiadecodigo.javabank.dao.TransactionManager;
 import org.academiadecodigo.javabank.factories.AccountFactory;
 import org.academiadecodigo.javabank.services.AccountService;
 import org.academiadecodigo.javabank.services.AuthServiceImpl;
 import org.academiadecodigo.javabank.services.CustomerService;
+import org.academiadecodigo.javabank.services.jpa.JpaAccountService;
+import org.academiadecodigo.javabank.services.jpa.JpaCustomerService;
 import org.academiadecodigo.javabank.view.*;
 
 import java.util.HashMap;
@@ -58,6 +64,24 @@ public class Bootstrap {
 
         // attach all input to standard i/o
         Prompt prompt = new Prompt(System.in, System.out);
+
+
+        //DAO layer
+        SessionManager sessionManager = new SessionManager();
+        TransactionManager transactionManager = new TransactionManager();
+        transactionManager.setSm(sessionManager);
+
+        DaoAccount daoAccount = new DaoAccount();
+        daoAccount.setSessionManager(sessionManager);
+        DaoCustomer daoCustomer = new DaoCustomer();
+        daoCustomer.setSessionManager(sessionManager);
+
+        JpaAccountService jpaAccountService = new JpaAccountService();
+        jpaAccountService.setTransactionManager(transactionManager);
+        jpaAccountService.setDaoAccount(daoAccount);
+        JpaCustomerService jpaCustomerService = new JpaCustomerService();
+        jpaCustomerService.setTransactionManager(transactionManager);
+        jpaCustomerService.setDaoCustomer(daoCustomer);
 
         // wire services
         authService.setCustomerService(customerService);

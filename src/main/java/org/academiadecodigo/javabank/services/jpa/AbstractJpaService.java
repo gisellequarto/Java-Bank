@@ -1,5 +1,7 @@
 package org.academiadecodigo.javabank.services.jpa;
 
+import org.academiadecodigo.javabank.dao.DaoAccount;
+import org.academiadecodigo.javabank.dao.TransactionManager;
 import org.academiadecodigo.javabank.model.AbstractModel;
 import org.academiadecodigo.javabank.services.CRUDService;
 
@@ -19,6 +21,7 @@ public abstract class AbstractJpaService<T extends AbstractModel> implements CRU
 
     protected EntityManagerFactory emf;
     private Class<T> modelType;
+    protected TransactionManager transactionManager;
 
     /**
      * Initializes a new {@code JPA Service} instance given an entity manager factory and a model type
@@ -30,6 +33,8 @@ public abstract class AbstractJpaService<T extends AbstractModel> implements CRU
         this.emf = emf;
         this.modelType = modelType;
     }
+
+    public AbstractJpaService(){}
 
     /**
      * @see CRUDService#list()
@@ -51,7 +56,6 @@ public abstract class AbstractJpaService<T extends AbstractModel> implements CRU
             }
         }
     }
-
     /**
      * @see CRUDService#get(Integer)
      */
@@ -123,4 +127,9 @@ public abstract class AbstractJpaService<T extends AbstractModel> implements CRU
             }
         }
     }
+
+    public void setTransactionManager(TransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
+    }
+
 }
