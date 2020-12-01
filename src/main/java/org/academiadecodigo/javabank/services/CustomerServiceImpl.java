@@ -6,6 +6,7 @@ import org.academiadecodigo.javabank.model.Recipient;
 import org.academiadecodigo.javabank.model.account.Account;
 import org.academiadecodigo.javabank.persistence.TransactionManager;
 import org.academiadecodigo.javabank.persistence.dao.CustomerDao;
+import org.academiadecodigo.javabank.persistence.jpa.JpaTransactionManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -115,4 +116,5 @@ public class CustomerServiceImpl implements CustomerService {
             tx.commit();
         }
     }
+
 }

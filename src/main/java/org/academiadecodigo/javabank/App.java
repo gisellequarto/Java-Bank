@@ -17,7 +17,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        JpaBootstrap jpa = new JpaBootstrap();
+      /*  JpaBootstrap jpa = new JpaBootstrap();
         EntityManagerFactory emf = jpa.start();
 
         JpaSessionManager sm = new JpaSessionManager(emf);
@@ -26,7 +26,10 @@ public class App {
         App app = new App();
         app.bootStrap(tx, sm);
 
-        jpa.stop();
+        jpa.stop();*/
+
+
+
 
     }
 
