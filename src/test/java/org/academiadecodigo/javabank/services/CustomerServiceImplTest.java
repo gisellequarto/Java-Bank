@@ -33,7 +33,6 @@ public class CustomerServiceImplTest {
         customerDao = mock(CustomerDao.class);
 
         customerService = new CustomerServiceImpl();
-        customerService.setTransactionManager(tx);
         customerService.setCustomerDao(customerDao);
 
     }

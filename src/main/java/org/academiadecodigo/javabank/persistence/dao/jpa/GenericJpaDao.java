@@ -7,6 +7,7 @@ import org.academiadecodigo.javabank.persistence.jpa.JpaSessionManager;
 import org.hibernate.HibernateException;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
@@ -36,6 +37,7 @@ public abstract class GenericJpaDao<T extends Model> implements Dao<T> {
      *
      * @param sm the session manager to set
      */
+    @PersistenceContext
     public void setSm(JpaSessionManager sm) {
         this.sm = sm;
     }
