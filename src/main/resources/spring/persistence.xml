@@ -18,11 +18,9 @@
     </bean>
 
     <bean id="accountDao" class="org.academiadecodigo.javabank.persistence.dao.jpa.JpaAccountDao">
-        <property name="sm" ref="sessionManager"/>
     </bean>
 
     <bean id="customerDao" class="org.academiadecodigo.javabank.persistence.dao.jpa.JpaCustomerDao">
-        <property name="sm" ref="sessionManager"/>
     </bean>
 
 </beans>

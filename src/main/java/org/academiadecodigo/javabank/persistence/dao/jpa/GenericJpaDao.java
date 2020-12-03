@@ -20,8 +20,8 @@ import java.util.List;
  */
 public abstract class GenericJpaDao<T extends Model> implements Dao<T> {
 
-    protected JpaSessionManager sm;
     protected Class<T> modelType;
+    protected EntityManager em;
 
     /**
      * Initializes a new JPA DAO instance given a model type
@@ -32,25 +32,17 @@ public abstract class GenericJpaDao<T extends Model> implements Dao<T> {
         this.modelType = modelType;
     }
 
-    /**
-     * Sets the session manager
-     *
-     * @param sm the session manager to set
-     */
     @PersistenceContext
-    public void setSm(JpaSessionManager sm) {
-        this.sm = sm;
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
-    /**
-     * @see Dao#findAll()
+    /* @see Dao#findAll()
      */
     @Override
     public List<T> findAll() {
 
         try {
-
-            EntityManager em = sm.getCurrentSession();
 
             CriteriaQuery<T> criteriaQuery = em.getCriteriaBuilder().createQuery(modelType);
             Root<T> root = criteriaQuery.from(modelType);
@@ -73,7 +65,6 @@ public abstract class GenericJpaDao<T extends Model> implements Dao<T> {
 
         try {
 
-            EntityManager em = sm.getCurrentSession();
             return em.find(modelType, id);
 
         } catch (HibernateException ex) {
@@ -89,7 +80,6 @@ public abstract class GenericJpaDao<T extends Model> implements Dao<T> {
 
         try {
 
-            EntityManager em = sm.getCurrentSession();
             return em.merge(modelObject);
 
         } catch (HibernateException ex) {
@@ -105,7 +95,6 @@ public abstract class GenericJpaDao<T extends Model> implements Dao<T> {
 
         try {
 
-            EntityManager em = sm.getCurrentSession();
             em.remove(em.find(modelType, id));
 
         } catch (HibernateException ex) {
