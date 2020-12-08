@@ -22,6 +22,9 @@ public class JpaCustomerDao extends GenericJpaDao<Customer> implements CustomerD
      */
     public List<Integer> getCustomerIds() {
         return em.createQuery("select id from Customer", Integer.class)
-                .getResultList();
+                  .getResultList();
     }
+
+
+
 }

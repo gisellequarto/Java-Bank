@@ -183,6 +183,7 @@ public class Customer extends AbstractModel {
     @Override
     public String toString() {
         return "Customer{" +
+                "id='" + this.getId() + '\'' +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
