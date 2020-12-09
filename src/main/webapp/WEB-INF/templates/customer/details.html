@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>JavaBank</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          modelType="text/css"/>
+    <script modelType="application/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script modelType="application/javascript" async
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="card">
+    <h5 class="card-header h5">Customer Details</h5>
+
+    <div class="card-body">
+        <h5 class="card-title">Id:</h5>
+        <p class="card-text" th:text="${customer.id}"></p>
+        <h5 class="card-title">First Name:</h5>
+        <p class="card-text" th:text="${customer.firstName}"></p>
+        <h5 class="card-title">Last Name:</h5>
+        <p class="card-text" th:text="${customer.lastName}"></p>
+        <h5 class="card-title">Email:</h5>
+        <p class="card-text" th:text="${customer.email}"></p>
+        <h5 class="card-title">Phone:</h5>
+        <p class="card-text" th:text="${customer.phone}"></p>
+
+        <div class="mainBox">
+            <h2>Accounts</h2>
+            <table class="table table-dark">
+                <thead>
+                <tr>
+                    <th>Account Id</th>
+                    <th>Balance</th>
+                </tr>
+
+                <tr th:each="account : ${customer.accounts}">
+                    <td th:text="${account.getId()}"></td>
+                    <td th:text="${account.getBalance()}"></td>
+                </tr>
+                </thead>
+            </table>
+
+            <a  class="btn btn-primary" th:href="@{'list'}">Back</a>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

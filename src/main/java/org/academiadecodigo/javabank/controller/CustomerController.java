@@ -5,8 +5,10 @@ import org.academiadecodigo.javabank.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Controller responsible for rendering {@link Customer} related views
@@ -36,6 +38,29 @@ public class CustomerController {
     @RequestMapping(method = RequestMethod.GET, path = {"/list", "/", ""})
     public String listCustomers(Model model) {
         model.addAttribute("customers", customerService.list());
+
         return "customer/list";
     }
+
+    @RequestMapping(method = RequestMethod.GET, path = {"/delete/{id}"})
+    public String deleteCustomer(@PathVariable Integer id) {
+        customerService.deleteCustomer(id);
+
+        return "redirect:/customer/list";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = {"/{id}"})
+    public String customerDetails(Model model, @PathVariable Integer id) {
+        Customer customer = customerService.get(id);
+
+        model.addAttribute("customer", customer);
+
+        return "customer/details";
+    }
+
+
+
+
+
+
 }
