@@ -2,6 +2,7 @@ package org.academiadecodigo.javabank.persistence.dao.jpa;
 
 import org.academiadecodigo.javabank.persistence.model.Customer;
 import org.academiadecodigo.javabank.persistence.dao.CustomerDao;
+import org.hibernate.TransactionException;
 
 import java.util.List;
 
@@ -20,11 +21,9 @@ public class JpaCustomerDao extends GenericJpaDao<Customer> implements CustomerD
     /**
      * @see CustomerDao#getCustomerIds()
      */
-    public List<Integer> getCustomerIds() {
-        return em.createQuery("select id from Customer", Integer.class)
-                  .getResultList();
+    public List<Integer> getCustomerIds() throws TransactionException {
+       return null;
     }
-
 
 
 }

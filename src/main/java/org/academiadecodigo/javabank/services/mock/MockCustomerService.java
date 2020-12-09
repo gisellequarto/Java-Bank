@@ -57,4 +57,9 @@ public class MockCustomerService extends AbstractMockService<Customer> implement
     public List<Recipient> listRecipients(Integer id) {
         return modelMap.get(id).getRecipients();
     }
+
+    @Override
+    public List<Customer> listCustomers() {
+        return null;
+    }
 }
