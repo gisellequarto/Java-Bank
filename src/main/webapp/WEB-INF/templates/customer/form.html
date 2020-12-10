@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <thymeleaf th:replace="header :: header"/>
+</head>
+<body>
+<div class="container">
+    <h2>Customer Form</h2>
+
+
+    <form th:object="${customer}" th:action="@{/customer/customer}" method="post">
+        <input type="hidden">
+        <div class="form-group">
+            <label for="formGroupExampleInput">First Name:</label>
+            <input type="text" th:field="*{firstName}" class="form-control" id="formGroupExampleInput">
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">Last Name:</label>
+            <input type="text" th:field="*{lastName}" class="form-control" id="formGroupExampleInput2">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" th:field="*{email}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput4">Phone:</label>
+            <input type="text" th:field="*{phone}" class="form-control" id="formGroupExampleInput4">
+        </div>
+        <input type="submit">
+    </form>
+
+</div>
+</body>
+</html>
