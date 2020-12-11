@@ -40,7 +40,7 @@
     </div>
     <div class="row">
         <div class="col-sm-4">
-            <div th:if="${not #lists.isEmpty(customer.accounts)}">
+            <div>
                 <h3>Accounts:</h3>
                 <table class="table table-striped">
                     <tr>
@@ -48,7 +48,7 @@
                         <th>Balance</th>
                         <th>Type</th>
                     </tr>
-                    <tr th:each="account : ${customer.accounts}">
+                    <tr th:each="account : ${accounts}">
                         <td th:text="${account.id}"></td>
                         <td th:text="${account.balance}"></td>
                         <td th:text="${account.accountType}"></td>

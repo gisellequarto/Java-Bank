@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <thymeleaf th:replace="header :: header" />
+    <thymeleaf th:replace="header :: header"/>
 </head>
 <body>
 <div class="container">
@@ -29,11 +29,13 @@
                 <td><a th:href="@{'/customer/' + ${customer.id} + '/delete'}">Delete</a></td>
             </tr>
         </table>
-
         <a th:href="@{'/customer/form/'}">New Customer</a>
-
+    </div>
+    <div th:if="${lastAction} != null" class="alert alert-primary mainBox" role="alert" th:text="${lastAction}">
     </div>
 </div>
 </body>
+
+
 </html>
 

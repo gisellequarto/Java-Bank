@@ -1,5 +1,7 @@
 package org.academiadecodigo.javabank.controller;
 
+import org.academiadecodigo.javabank.dto.ConverterDto;
+import org.academiadecodigo.javabank.dto.CustomerDto;
 import org.academiadecodigo.javabank.persistence.model.Customer;
 import org.academiadecodigo.javabank.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * Controller responsible for rendering {@link Customer} related views
  */
@@ -19,7 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CustomerController {
 
     private CustomerService customerService;
-
+    private ConverterDto converterDto;
     /**
      * Sets the customer service
      *
@@ -30,6 +37,11 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    @Autowired
+    public void setConverterDto(ConverterDto converterDto) {
+        this.converterDto = converterDto;
+    }
+
     /**
      * Renders a view with a list of customers
      *
@@ -38,7 +50,11 @@ public class CustomerController {
      */
     @RequestMapping(method = RequestMethod.GET, path = {"/list", "/", ""})
     public String listCustomers(Model model) {
-        model.addAttribute("customers", customerService.list());
+
+        List<CustomerDto> customerDtoList = customerService.list().stream()
+                .map(c -> converterDto.converterCustomer(c)).collect(Collectors.toList());
+
+        model.addAttribute("customers", customerDtoList);
         return "customer/list";
     }
 
@@ -51,7 +67,12 @@ public class CustomerController {
      */
     @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public String showCustomer(@PathVariable Integer id, Model model) {
-        model.addAttribute("customer", customerService.get(id));
+
+        Customer customer = customerService.get(id);
+        CustomerDto customerDto = converterDto.converterCustomer(customer);
+
+        model.addAttribute("customer", customerDto);
+        model.addAttribute("accounts" , customer.getAccounts());
         model.addAttribute("recipients", customerService.listRecipients(id));
         return "customer/show";
     }
@@ -63,8 +84,10 @@ public class CustomerController {
      * @return the view to render
      */
     @RequestMapping(method = RequestMethod.GET, path = "{id}/delete")
-    public String deleteCustomer(@PathVariable Integer id) {
+    public String deleteCustomer(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         customerService.delete(id);
+        redirectAttributes.addFlashAttribute("lastAction", "Customer #id" + id + " deleted!" );
+
         return "redirect:/customer/list";
     }
 
@@ -83,27 +106,30 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.GET, path = "form/{id}")
     public String editCustomer(@PathVariable Integer id, Model model) {
-        model.addAttribute("customer", customerService.get(id));
+        model.addAttribute("customer", converterDto.converterCustomer(customerService.get(id)));
         return "customer/form";
     }
 
 
     @RequestMapping(method = RequestMethod.GET, path = "form/")
     public String newCustomer(Model model) {
-        model.addAttribute("customer", new Customer());
+        model.addAttribute("customer", new CustomerDto());
         return "customer/form";
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/customer")
-    public String saveOrUpdateCustomer(@ModelAttribute Customer customer, RedirectAttributes redirectAttributes) {
-
-        if (customer.getId() == null) {
+    public String saveOrUpdateCustomer(@ModelAttribute CustomerDto customerDto, RedirectAttributes redirectAttributes) {
+        /*
+        if (customerDto.getId() == null) {
             redirectAttributes.addFlashAttribute("lastAction", "Added customer successfully!");
         } else {
             redirectAttributes.addFlashAttribute("lastAction", "Customer successfully edited");
-        }
+        }*/
 
-        Customer savedOrUpdatedcustomer = customerService.save(customer);
+        Customer customer = converterDto.converterCustomerDto(customerDto);
+        customerService.save(customer);
+        redirectAttributes.addFlashAttribute("lastAction", "Operation Successfully!");
+
         return "redirect:/customer/list";
     }
 
