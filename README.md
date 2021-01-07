@@ -1,4 +1,4 @@
-# Java-Bank
+# JavaBank
 
 Final Bootcamp exercise, building a bank application, respecting the conventions and good programming practices.
 
